@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Create your free TalentSync account. Choose your role — job seeker or recruiter — and get started in minutes." />
+  <meta name="robots" content="noindex" />
+
+  <title>Create Account — TalentSync</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="auth-page">
+
+    <!-- ═══════════════════════════════════════════════
+         LEFT — Brand Panel
+    ═══════════════════════════════════════════════ -->
+    <aside class="auth-panel auth-panel--brand" aria-label="Brand information">
+
+      <a href="index.html" class="auth-brand__logo" aria-label="TalentSync home">
+        <div class="navbar__logo-icon" aria-hidden="true">⚡</div>
+        Talent<span>Sync</span>
+      </a>
+
+      <h2 class="auth-brand__headline">
+        Talent meets<br />
+        <span>opportunity</span> here
+      </h2>
+
+      <p class="auth-brand__sub">
+        Whether you're hunting for your dream role or building a world-class team, TalentSync is your platform.
+      </p>
+
+      <ul class="auth-brand__features" aria-label="Platform features">
+        <li class="auth-brand__feature">
+          <div class="auth-brand__feature-icon" aria-hidden="true">🚀</div>
+          <span>Apply to jobs with a single click using your profile</span>
+        </li>
+        <li class="auth-brand__feature">
+          <div class="auth-brand__feature-icon" aria-hidden="true">🏢</div>
+          <span>Recruiters: post listings and manage applicants in one view</span>
+        </li>
+        <li class="auth-brand__feature">
+          <div class="auth-brand__feature-icon" aria-hidden="true">📈</div>
+          <span>Real-time application status updates for seekers</span>
+        </li>
+        <li class="auth-brand__feature">
+          <div class="auth-brand__feature-icon" aria-hidden="true">🎯</div>
+          <span>Smart filters help you find the perfect match faster</span>
+        </li>
+      </ul>
+
+    </aside>
+
+
+    <!-- ═══════════════════════════════════════════════
+         RIGHT — Register Form
+    ═══════════════════════════════════════════════ -->
+    <main class="auth-panel auth-panel--form" id="register-main">
+      <div class="auth-form-container animate-fade-in">
+
+        <a href="index.html" class="btn btn--ghost btn--sm" style="margin-bottom:var(--space-xl);" aria-label="Back to home page">
+          ← Home
+        </a>
+
+        <h1>Create your account</h1>
+        <p class="auth-subtitle">
+          Already have an account?
+          <a href="login.html" id="link-to-login">Log in →</a>
+        </p>
+
+        <!-- API error alert -->
+        <div class="auth-alert auth-alert--error" id="register-alert" role="alert" aria-live="assertive"></div>
+
+        <form class="auth-form" id="register-form" novalidate autocomplete="off">
+
+          <!-- ── Step 1: Role selection ───────────────── -->
+          <div class="form-group">
+            <label class="form-label" id="role-label">
+              I am a… <span class="required" aria-label="required">*</span>
+            </label>
+
+            <div class="role-toggle" role="radiogroup" aria-labelledby="role-label">
+
+              <div class="role-toggle__option">
+                <input
+                  type="radio"
+                  class="role-toggle__input"
+                  id="role-seeker"
+                  name="role"
+                  value="seeker"
+                  checked
+                  aria-describedby="role-seeker-desc"
+                />
+                <label class="role-toggle__label" for="role-seeker">
+                  <span class="role-toggle__icon" aria-hidden="true">🧑‍💻</span>
+                  <span class="role-toggle__text">Job Seeker</span>
+                  <span id="role-seeker-desc" class="form-hint" style="font-size:0.72rem; text-align:center; margin-top:2px;">
+                    Find & apply for jobs
+                  </span>
+                </label>
+              </div>
+
+              <div class="role-toggle__option">
+                <input
+                  type="radio"
+                  class="role-toggle__input"
+                  id="role-recruiter"
+                  name="role"
+                  value="recruiter"
+                  aria-describedby="role-recruiter-desc"
+                />
+                <label class="role-toggle__label" for="role-recruiter">
+                  <span class="role-toggle__icon" aria-hidden="true">🏢</span>
+                  <span class="role-toggle__text">Recruiter</span>
+                  <span id="role-recruiter-desc" class="form-hint" style="font-size:0.72rem; text-align:center; margin-top:2px;">
+                    Post jobs & hire talent
+                  </span>
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <hr class="divider" aria-hidden="true" />
+
+          <!-- ── Step 2: Personal info ───────────────── -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="register-first-name">
+                First name <span class="required" aria-label="required">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="register-first-name"
+                name="firstName"
+                placeholder="Jane"
+                autocomplete="given-name"
+                required
+                aria-required="true"
+                aria-describedby="first-name-error"
+                maxlength="50"
+              />
+              <span class="form-error" id="first-name-error" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="register-last-name">
+                Last name <span class="required" aria-label="required">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="register-last-name"
+                name="lastName"
+                placeholder="Doe"
+                autocomplete="family-name"
+                required
+                aria-required="true"
+                aria-describedby="last-name-error"
+                maxlength="50"
+              />
+              <span class="form-error" id="last-name-error" role="alert"></span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="register-email">
+              Email address <span class="required" aria-label="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">✉</span>
+              <input
+                type="email"
+                class="form-control"
+                id="register-email"
+                name="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+                aria-required="true"
+                aria-describedby="register-email-error"
+              />
+            </div>
+            <span class="form-error" id="register-email-error" role="alert"></span>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label" for="register-password">
+              Password <span class="required" aria-label="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">🔑</span>
+              <input
+                type="password"
+                class="form-control"
+                id="register-password"
+                name="password"
+                placeholder="Minimum 8 characters"
+                autocomplete="new-password"
+                required
+                aria-required="true"
+                minlength="8"
+                aria-describedby="register-password-hint register-password-error"
+              />
+              <button
+                type="button"
+                class="input-toggle"
+                id="toggle-register-password"
+                aria-label="Toggle password visibility"
+                aria-pressed="false"
+              >👁</button>
+            </div>
+            <span class="form-hint" id="register-password-hint">
+              Min 8 characters. Use a mix of letters, numbers & symbols.
+            </span>
+            <span class="form-error" id="register-password-error" role="alert"></span>
+          </div>
+
+          <!-- Password strength bar (updated by JS) -->
+          <div id="password-strength-wrapper" style="display:none;" aria-hidden="true">
+            <div style="height:4px; background:var(--border-subtle); border-radius:var(--radius-full); overflow:hidden;">
+              <div
+                id="password-strength-bar"
+                style="height:100%; width:0%; border-radius:var(--radius-full); transition:width 0.3s ease, background 0.3s ease;"
+              ></div>
+            </div>
+            <span id="password-strength-label" style="font-size:0.72rem; color:var(--text-muted); margin-top:4px; display:block;"></span>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label class="form-label" for="register-confirm-password">
+              Confirm password <span class="required" aria-label="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">🔑</span>
+              <input
+                type="password"
+                class="form-control"
+                id="register-confirm-password"
+                name="confirmPassword"
+                placeholder="Re-enter your password"
+                autocomplete="new-password"
+                required
+                aria-required="true"
+                aria-describedby="confirm-password-error"
+              />
+            </div>
+            <span class="form-error" id="confirm-password-error" role="alert"></span>
+          </div>
+
+          <!-- Recruiter-only field (shown/hidden by JS based on role selection) -->
+          <div class="form-group" id="company-name-field" style="display:none;">
+            <label class="form-label" for="register-company">
+              Company name <span class="required" aria-label="required">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="register-company"
+              name="companyName"
+              placeholder="Acme Corp"
+              autocomplete="organization"
+              maxlength="150"
+              aria-describedby="company-name-error"
+            />
+            <span class="form-error" id="company-name-error" role="alert"></span>
+          </div>
+
+          <!-- Terms agreement -->
+          <div class="flex items-center gap-sm" style="align-items:flex-start;">
+            <input
+              type="checkbox"
+              id="agree-terms"
+              name="agreeTerms"
+              required
+              aria-required="true"
+              style="accent-color: var(--accent); width:16px; height:16px; cursor:pointer; margin-top:3px; flex-shrink:0;"
+            />
+            <label for="agree-terms" style="font-size:0.82rem; color:var(--text-secondary); cursor:pointer; line-height:1.5;">
+              I agree to the <a href="#" id="terms-link">Terms of Service</a> and
+              <a href="#" id="privacy-link">Privacy Policy</a>
+            </label>
+          </div>
+          <span class="form-error" id="terms-error" role="alert"></span>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn--primary btn--full btn--lg" id="register-submit-btn">
+            Create Account
+          </button>
+
+        </form>
+
+        <p class="auth-footer-link">
+          Already have an account?
+          <a href="login.html" id="link-existing-account">Log in →</a>
+        </p>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+  <script src="js/api.js" defer></script>
+  <script src="js/auth.js" defer></script>
+</body>
+</html>

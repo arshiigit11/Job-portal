@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Your TalentSync dashboard — manage applications, job listings, and your profile." />
+  <meta name="robots" content="noindex" />
+
+  <title>Dashboard — TalentSync</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/features.css" />
+  <!-- Global Error Handler for Debugging -->
+  <script>
+    window.addEventListener('error', function(e) {
+      alert('Javascript Error: ' + e.message + ' at ' + e.filename + ':' + e.lineno);
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      alert('Unhandled Promise Rejection: ' + (e.reason && e.reason.message ? e.reason.message : e.reason));
+    });
+  </script>
+
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       DASHBOARD LAYOUT WRAPPER
+       JS adds .seeker-mode or .recruiter-mode to this element,
+       which allows CSS + JS to show/hide role-specific sections.
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="dashboard-page" id="dashboard-page" data-role="">
+
+    <!-- ═══════════════════════════════════════════════
+         SIDEBAR
+    ═══════════════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Dashboard navigation">
+
+      <!-- Logo -->
+      <a href="index.html" class="sidebar__logo" aria-label="Go to TalentSync home">
+        <div class="sidebar__logo-icon" aria-hidden="true">⚡</div>
+        Talent<span>Sync</span>
+      </a>
+
+      <!-- ── SHARED NAV (visible to both roles) ──────── -->
+      <p class="sidebar__section-label">Main</p>
+      <ul class="sidebar__nav" id="sidebar-shared-nav" role="list">
+
+        <li>
+          <button
+            class="sidebar__nav-item active"
+            id="nav-overview"
+            data-view="overview"
+            aria-current="page"
+            aria-label="Go to overview"
+          >
+            <span class="sidebar__nav-icon" aria-hidden="true">🏠</span>
+            Overview
+          </button>
+        </li>
+
+        <li>
+          <button
+            class="sidebar__nav-item"
+            id="nav-profile"
+            data-view="profile"
+            aria-label="Go to profile settings"
+          >
+            <span class="sidebar__nav-icon" aria-hidden="true">👤</span>
+            My Profile
+          </button>
+        </li>
+
+      </ul>
+
+      <!-- ── SEEKER-ONLY NAV ──────────────────────────
+           Hidden by JS when role === 'recruiter'
+      ─────────────────────────────────────────────── -->
+      <div class="seeker-view" id="seeker-nav-section">
+        <p class="sidebar__section-label">Job Hunting</p>
+        <ul class="sidebar__nav" id="sidebar-seeker-nav" role="list">
+
+          <li>
+            <button class="sidebar__nav-item" id="nav-browse-jobs" data-view="browse-jobs" aria-label="Browse all job listings">
+              <span class="sidebar__nav-icon" aria-hidden="true">🔍</span>Browse Jobs
+            </button>
+          </li>
+
+          <li>
+            <button class="sidebar__nav-item" id="nav-my-applications" data-view="my-applications" aria-label="View my submitted applications">
+              <span class="sidebar__nav-icon" aria-hidden="true">📨</span>My Applications
+              <span class="sidebar__nav-badge" id="badge-applications">0</span>
+            </button>
+          </li>
+
+          <li>
+            <button class="sidebar__nav-item" id="nav-interviews" data-view="interviews" aria-label="View scheduled interviews">
+              <span class="sidebar__nav-icon" aria-hidden="true">📅</span>My Interviews
+              <span class="sidebar__nav-badge" id="badge-interviews">0</span>
+            </button>
+          </li>
+
+
+          <li>
+            <button class="sidebar__nav-item" id="nav-ai-score" data-view="ai-score" aria-label="Check your AI resume score">
+              <span class="sidebar__nav-icon" aria-hidden="true">🤖</span>AI Resume Score
+            </button>
+          </li>
+
+          <li>
+            <button class="sidebar__nav-item" id="nav-predictor" data-view="predictor" aria-label="Predict your placement chances">
+              <span class="sidebar__nav-icon" aria-hidden="true">📊</span>Placement Predictor
+            </button>
+          </li>
+
+          <li>
+            <button class="sidebar__nav-item" id="nav-saved-jobs" data-view="saved-jobs" aria-label="View saved jobs">
+              <span class="sidebar__nav-icon" aria-hidden="true">🔖</span>Saved Jobs
+              <span class="sidebar__nav-badge" id="badge-saved" style="display:none;">0</span>
+            </button>
+          </li>
+
+          <li>
+            <button class="sidebar__nav-item" id="nav-alerts" data-view="alerts" aria-label="Manage job alerts">
+              <span class="sidebar__nav-icon" aria-hidden="true">🔔</span>Job Alerts
+            </button>
+          </li>
+
+          <li>
+            <button class="sidebar__nav-item" id="nav-chat" data-view="chat" aria-label="Community board and announcements">
+              <span class="sidebar__nav-icon" aria-hidden="true">💬</span>Chat &amp; Board
+            </button>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- ── RECRUITER-ONLY NAV ──────────────────────
+           Hidden by JS when role === 'seeker'
+      ─────────────────────────────────────────────── -->
+      <div class="recruiter-view" id="recruiter-nav-section">
+        <p class="sidebar__section-label">Hiring</p>
+        <ul class="sidebar__nav" id="sidebar-recruiter-nav" role="list">
+
+          <li>
+            <button
+              class="sidebar__nav-item"
+              id="nav-my-listings"
+              data-view="my-listings"
+              aria-label="View my job listings"
+            >
+              <span class="sidebar__nav-icon" aria-hidden="true">💼</span>
+              My Listings
+              <span class="sidebar__nav-badge" id="badge-listings" aria-label="active listings count">0</span>
+            </button>
+          </li>
+
+          <li>
+            <button
+              class="sidebar__nav-item"
+              id="nav-applicants"
+              data-view="applicants"
+              aria-label="View all applicants"
+            >
+              <span class="sidebar__nav-icon" aria-hidden="true">👥</span>
+              Applicants
+              <span class="sidebar__nav-badge" id="badge-applicants" aria-label="total applicants count">0</span>
+            </button>
+          </li>
+
+          <li>
+            <button
+              class="sidebar__nav-item"
+              id="nav-recruiter-interviews"
+              data-view="interviews"
+              aria-label="View scheduled interviews"
+            >
+              <span class="sidebar__nav-icon" aria-hidden="true">📅</span>
+              Interviews
+              <span class="sidebar__nav-badge" id="badge-recruiter-interviews">0</span>
+            </button>
+          </li>
+
+
+
+          <li>
+            <button
+              class="sidebar__nav-item"
+              id="nav-analytics"
+              data-view="analytics"
+              aria-label="View hiring analytics"
+            >
+              <span class="sidebar__nav-icon" aria-hidden="true">📈</span>
+              Analytics
+            </button>
+          </li>
+
+          <li>
+            <button
+              class="sidebar__nav-item"
+              id="nav-post-job"
+              data-view="post-job"
+              aria-label="Post a new job"
+            >
+              <span class="sidebar__nav-icon" aria-hidden="true">➕</span>
+              Post a Job
+            </button>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- ── USER PROFILE (bottom of sidebar) ──────── -->
+      <div class="sidebar__user" id="sidebar-user-block" aria-label="Logged-in user">
+        <div class="sidebar__user-avatar" id="sidebar-avatar" aria-hidden="true">JD</div>
+        <div class="sidebar__user-info">
+          <div class="sidebar__user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar__user-role" id="sidebar-user-role">—</div>
+        </div>
+        <button class="sidebar__logout" id="sidebar-logout-btn" title="Log out" aria-label="Log out of your account">
+          ⏻
+        </button>
+      </div>
+
+    </aside>
+
+
+    <!-- ═══════════════════════════════════════════════
+         MAIN CONTENT AREA
+    ═══════════════════════════════════════════════ -->
+    <div class="dashboard-main" id="dashboard-main">
+
+      <!-- Top Bar -->
+      <header class="dashboard-topbar" role="banner">
+        <!-- Mobile sidebar toggle -->
+        <button
+          class="navbar__hamburger"
+          id="sidebar-toggle-btn"
+          aria-label="Toggle sidebar"
+          aria-expanded="false"
+          aria-controls="sidebar"
+          style="display:flex;"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <h1 class="dashboard-topbar__title" id="topbar-title">Overview</h1>
+
+        <div class="dashboard-topbar__actions">
+          <!-- Recruiter: quick post button -->
+          <div class="recruiter-view" id="topbar-post-btn-wrapper">
+            <button
+              class="btn btn--primary btn--sm"
+              id="topbar-post-job-btn"
+              aria-label="Post a new job listing"
+            >
+              ➕ Post Job
+            </button>
+          </div>
+
+          <!-- Notifications bell -->
+          <button
+            class="btn btn--ghost btn--sm"
+            id="notifications-btn"
+            aria-label="View notifications"
+            style="position:relative;"
+          >
+            🔔
+            <span
+              id="notification-dot"
+              style="
+                position:absolute;
+                top:6px; right:6px;
+                width:8px; height:8px;
+                background:var(--danger);
+                border-radius:50%;
+                display:none;
+              "
+              aria-label="unread notifications"
+            ></span>
+          </button>
+        </div>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────────
+           #dashboard-content
+           All view panels live here.
+           JS swaps them via data-view attributes.
+      ───────────────────────────────────────────── -->
+      <div id="dashboard-content">
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: OVERVIEW (shown first on load)
+             data-view="overview"
+        ══════════════════════════════════════════ -->
+        <section
+          class="dashboard-view animate-fade-in"
+          id="view-overview"
+          data-view="overview"
+          aria-labelledby="overview-heading"
+        >
+          <!-- Welcome banner -->
+          <div class="dashboard-panel" id="welcome-banner">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:var(--space-md);">
+              <div>
+                <h2 id="overview-heading" style="font-size:1.3rem; margin-bottom:var(--space-xs);">
+                  Good evening, <span id="welcome-name" style="color:var(--accent);">there</span> 👋
+                </h2>
+                <p style="max-width:100%; color:var(--text-muted); font-size:0.875rem;" id="welcome-subtitle">
+                  Here's a snapshot of your activity today.
+                </p>
+              </div>
+              <!-- Role-specific CTAs in the banner -->
+              <div class="seeker-view">
+                <a href="index.html" class="btn btn--primary btn--sm">🔍 Browse New Jobs</a>
+              </div>
+              <div class="recruiter-view">
+                <button class="btn btn--primary btn--sm" id="overview-post-job-btn">➕ Post a New Job</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── SEEKER STATS ─────────────────────────
+               Shown when role === 'seeker'
+          ───────────────────────────────────────── -->
+          <div class="seeker-view" id="seeker-stats-section">
+            <div class="stats-grid" id="seeker-stats-grid" role="list" aria-label="Seeker statistics">
+
+              <div class="stat-card" role="listitem" id="stat-total-applied">
+                <div class="stat-card__header">
+                  <div class="stat-card__icon stat-card__icon--blue" aria-hidden="true">📨</div>
+                  <span class="stat-card__trend stat-card__trend--up" aria-label="trend up">↑ 3</span>
+                </div>
+                <div class="stat-card__value" id="stat-applied-count">0</div>
+                <div class="stat-card__label">Total Applications</div>
+              </div>
+
+              <div class="stat-card" role="listitem" id="stat-pending">
+                <div class="stat-card__header">
+                  <div class="stat-card__icon stat-card__icon--amber" aria-hidden="true">⏳</div>
+                </div>
+                <div class="stat-card__value" id="stat-pending-count">0</div>
+                <div class="stat-card__label">Pending Review</div>
+              </div>
+
+              <div class="stat-card" role="listitem" id="stat-shortlisted">
+                <div class="stat-card__header">
+                  <div class="stat-card__icon stat-card__icon--green" aria-hidden="true">⭐</div>
+                </div>
+                <div class="stat-card__value" id="stat-shortlisted-count">0</div>
+                <div class="stat-card__label">Shortlisted</div>
+              </div>
+
+              <div class="stat-card" role="listitem" id="stat-interviews">
+                <div class="stat-card__header">
+                  <div class="stat-card__icon stat-card__icon--blue" aria-hidden="true">🗓️</div>
+                </div>
+                <div class="stat-card__value" id="stat-interviews-count">0</div>
+                <div class="stat-card__label">Accepted</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── RECRUITER STATS ──────────────────────
+               Shown when role === 'recruiter'
+          ───────────────────────────────────────── -->
+          <div class="recruiter-view" id="recruiter-stats-section">
+            <div class="stats-grid" id="recruiter-stats-grid" role="list" aria-label="Recruiter statistics">
+
+              <div class="stat-card" role="listitem" id="stat-active-listings">
+                <div class="stat-card__header">
+                  <div class="stat-card__icon stat-card__icon--blue" aria-hidden="true">💼</div>
+                </div>
+                <div class="stat-card__value" id="stat-listings-count">0</div>
+                <div class="stat-card__label">Active Listings</div>
+              </div>
+
+              <div class="stat-card" role="listitem" id="stat-total-applicants">
+                <div class="stat-card__header">
+                  <div class="stat-card__icon stat-card__icon--green" aria-hidden="true">👥</div>
+                  <span class="stat-card__trend stat-card__trend--up" aria-label="trend up">↑ 12</span>
+                </div>
+                <div class="stat-card__value" id="stat-applicants-count">0</div>
+                <div class="stat-card__label">Total Applicants</div>
+              </div>
+
+              <div class="stat-card" role="listitem" id="stat-pending-review">
+                <div class="stat-card__header">
+                  <div class="stat-card__icon stat-card__icon--amber" aria-hidden="true">⏳</div>
+                </div>
+                <div class="stat-card__value" id="stat-pending-review-count">0</div>
+                <div class="stat-card__label">Awaiting Review</div>
+              </div>
+
+              <div class="stat-card" role="listitem" id="stat-views">
+                <div class="stat-card__header">
+                  <div class="stat-card__icon stat-card__icon--blue" aria-hidden="true">👁️</div>
+                </div>
+                <div class="stat-card__value" id="stat-views-count">0</div>
+                <div class="stat-card__label">Total Job Views</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── RECENT ACTIVITY TABLE (shared) ─────── -->
+          <div class="data-table-wrapper" id="recent-activity-table">
+            <div class="data-table-header">
+              <h3 id="activity-table-title">Recent Activity</h3>
+              <button class="btn btn--ghost btn--sm" id="view-all-activity-btn" aria-label="View all activity">
+                View All →
+              </button>
+            </div>
+            <table class="data-table" aria-label="Recent activity">
+              <thead>
+                <tr>
+                  <th scope="col">Job / Role</th>
+                  <th scope="col">Company</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Date</th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody id="activity-table-body">
+                <!-- Populated by JS -->
+                <tr id="activity-table-empty">
+                  <td colspan="5" style="text-align:center; color:var(--text-muted); padding:var(--space-xl);">
+                    No activity yet. Start by browsing jobs!
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: MY APPLICATIONS (Seeker only)
+             data-view="my-applications"
+        ══════════════════════════════════════════ -->
+        <section
+          class="dashboard-view seeker-view"
+          id="view-my-applications"
+          data-view="my-applications"
+          aria-labelledby="applications-heading"
+          style="display:none;"
+        >
+          <div class="section-header" style="margin-bottom:var(--space-lg);">
+            <h2 id="applications-heading">My Applications</h2>
+            <div class="flex gap-sm">
+              <select class="form-control" id="applications-status-filter" style="width:auto;" aria-label="Filter by status">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="shortlisted">Shortlisted</option>
+                <option value="accepted">Accepted</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table" aria-label="My job applications">
+              <thead>
+                <tr>
+                  <th scope="col">Job Title</th>
+                  <th scope="col">Company</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Applied On</th>
+                  <th scope="col">Status</th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody id="my-applications-body">
+                <tr id="my-applications-empty">
+                  <td colspan="6" style="text-align:center; color:var(--text-muted); padding:var(--space-xl);">
+                    You haven't applied to any jobs yet.
+                    <a href="index.html" style="display:block; margin-top:var(--space-sm);">Browse jobs →</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="my-applications-pagination" style="text-align:center; margin-top:var(--space-lg); display:none;">
+            <button class="btn btn--secondary btn--sm" id="load-more-applications-btn">Load More</button>
+          </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: MY LISTINGS (Recruiter only)
+             data-view="my-listings"
+        ══════════════════════════════════════════ -->
+        <section
+          class="dashboard-view recruiter-view"
+          id="view-my-listings"
+          data-view="my-listings"
+          aria-labelledby="listings-heading"
+          style="display:none;"
+        >
+          <div class="section-header" style="margin-bottom:var(--space-lg);">
+            <h2 id="listings-heading">My Job Listings</h2>
+            <div class="flex gap-sm">
+              <select class="form-control" id="listings-status-filter" style="width:auto;" aria-label="Filter listings by status">
+                <option value="">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+                <option value="paused">Paused</option>
+              </select>
+              <button class="btn btn--primary btn--sm" id="listings-post-new-btn" aria-label="Post a new job">
+                ➕ Post Job
+              </button>
+            </div>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table" aria-label="My job listings">
+              <thead>
+                <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Applicants</th>
+                  <th scope="col">Views</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Posted</th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody id="my-listings-body">
+                <tr id="my-listings-empty">
+                  <td colspan="7" style="text-align:center; color:var(--text-muted); padding:var(--space-xl);">
+                    You haven't posted any jobs yet.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: APPLICANTS (Recruiter only)
+             data-view="applicants"
+        ══════════════════════════════════════════ -->
+        <section
+          class="dashboard-view recruiter-view"
+          id="view-applicants"
+          data-view="applicants"
+          aria-labelledby="applicants-heading"
+          style="display:none;"
+        >
+          <div class="section-header" style="margin-bottom:var(--space-lg);">
+            <h2 id="applicants-heading">Applicants</h2>
+            <div class="flex gap-sm">
+              <!-- Job filter: which job's applicants to show -->
+              <select class="form-control" id="applicants-job-filter" style="width:auto; max-width:220px;" aria-label="Filter applicants by job">
+                <option value="">All My Jobs</option>
+                <!-- Populated by JS -->
+              </select>
+              <select class="form-control" id="applicants-status-filter" style="width:auto;" aria-label="Filter applicants by status">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="shortlisted">Shortlisted</option>
+                <option value="accepted">Accepted</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table" aria-label="Job applicants">
+              <thead>
+                <tr>
+                  <th scope="col">Applicant</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Applied For</th>
+                  <th scope="col">Applied On</th>
+                  <th scope="col">Status</th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody id="applicants-table-body">
+                <tr id="applicants-empty">
+                  <td colspan="6" style="text-align:center; color:var(--text-muted); padding:var(--space-xl);">
+                    No applicants yet. Post a job to start receiving applications.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: POST A JOB (Recruiter only)
+             data-view="post-job"
+        ══════════════════════════════════════════ -->
+        <section
+          class="dashboard-view recruiter-view"
+          id="view-post-job"
+          data-view="post-job"
+          aria-labelledby="post-job-heading"
+          style="display:none;"
+        >
+          <div class="dashboard-panel" style="max-width: 760px;">
+            <h2 class="dashboard-panel__title" id="post-job-heading">📋 Post a New Job</h2>
+
+            <div class="auth-alert auth-alert--error" id="post-job-alert" role="alert" aria-live="assertive"></div>
+            <div class="auth-alert auth-alert--success" id="post-job-success" role="status" aria-live="polite"></div>
+
+            <form id="post-job-form" class="auth-form" novalidate onsubmit="return window.handlePostJobSubmit(event)">
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="job-title">
+                    Job Title <span class="required" aria-label="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="job-title"
+                    name="title"
+                    placeholder="e.g. Senior React Developer"
+                    required
+                    maxlength="150"
+                    aria-describedby="job-title-error"
+                  />
+                  <span class="form-error" id="job-title-error" role="alert"></span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="job-company">
+                    Company Name <span class="required" aria-label="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="job-company"
+                    name="company"
+                    placeholder="e.g. Acme Corp"
+                    required
+                    maxlength="150"
+                    aria-describedby="job-company-error"
+                  />
+                  <span class="form-error" id="job-company-error" role="alert"></span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="job-location">
+                    Location <span class="required" aria-label="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="job-location"
+                    name="location"
+                    placeholder="e.g. San Francisco, CA"
+                    required
+                    aria-describedby="job-location-error"
+                  />
+                  <span class="form-error" id="job-location-error" role="alert"></span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="job-location-type">Location Type</label>
+                  <select class="form-control" id="job-location-type" name="locationType" aria-label="Select location type">
+                    <option value="on-site">On-site</option>
+                    <option value="remote">Remote</option>
+                    <option value="hybrid" selected>Hybrid</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="job-type">Job Type</label>
+                  <select class="form-control" id="job-type" name="jobType" aria-label="Select job type">
+                    <option value="full-time" selected>Full-time</option>
+                    <option value="part-time">Part-time</option>
+                    <option value="contract">Contract</option>
+                    <option value="internship">Internship</option>
+                    <option value="freelance">Freelance</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="job-experience">Experience Level</label>
+                  <select class="form-control" id="job-experience" name="experienceLevel" aria-label="Select experience level">
+                    <option value="entry">Entry</option>
+                    <option value="mid" selected>Mid</option>
+                    <option value="senior">Senior</option>
+                    <option value="lead">Lead</option>
+                    <option value="executive">Executive</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="job-category">Category</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="job-category"
+                  name="category"
+                  placeholder="e.g. Engineering, Design, Marketing"
+                  maxlength="80"
+                />
+              </div>
+
+              <!-- Salary fields -->
+              <fieldset style="border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:var(--space-md);">
+                <legend class="form-label" style="padding-inline:var(--space-sm);">Salary (Optional)</legend>
+                <div class="form-row" style="margin-top:var(--space-sm);">
+                  <div class="form-group">
+                    <label class="form-label" for="salary-min">Minimum</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="salary-min"
+                      name="salaryMin"
+                      placeholder="e.g. 80000"
+                      min="0"
+                      aria-label="Minimum salary"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="salary-max">Maximum</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="salary-max"
+                      name="salaryMax"
+                      placeholder="e.g. 120000"
+                      min="0"
+                      aria-label="Maximum salary"
+                    />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="salary-currency">Currency</label>
+                    <select class="form-control" id="salary-currency" name="salaryCurrency" aria-label="Select salary currency">
+                      <option value="USD" selected>USD</option>
+                      <option value="GBP">GBP</option>
+                      <option value="EUR">EUR</option>
+                      <option value="INR">INR</option>
+                      <option value="CAD">CAD</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="salary-period">Period</label>
+                    <select class="form-control" id="salary-period" name="salaryPeriod" aria-label="Select salary period">
+                      <option value="yearly" selected>Yearly</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="hourly">Hourly</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="flex items-center gap-sm" style="margin-top:var(--space-sm);">
+                  <input
+                    type="checkbox"
+                    id="salary-negotiable"
+                    name="salaryNegotiable"
+                    style="accent-color: var(--accent); width:15px; height:15px; cursor:pointer;"
+                  />
+                  <label for="salary-negotiable" style="font-size:0.85rem; color:var(--text-secondary); cursor:pointer;">
+                    Salary is negotiable
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Skills -->
+              <div class="form-group">
+                <label class="form-label" for="job-skills">Required Skills</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="job-skills"
+                  name="skills"
+                  placeholder="React, Node.js, PostgreSQL (comma-separated)"
+                />
+                <span class="form-hint">Separate skills with commas.</span>
+              </div>
+
+              <!-- Application Deadline -->
+              <div class="form-group">
+                <label class="form-label" for="job-deadline">Application Deadline (Optional)</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="job-deadline"
+                  name="applicationDeadline"
+                  aria-label="Application deadline date"
+                />
+              </div>
+
+              <!-- Description -->
+              <div class="form-group">
+                <label class="form-label" for="job-description">
+                  Job Description <span class="required" aria-label="required">*</span>
+                </label>
+                <textarea
+                  class="form-control"
+                  id="job-description"
+                  name="description"
+                  placeholder="Describe the role, responsibilities, requirements, and what makes your company great to work at…"
+                  rows="8"
+                  required
+                  maxlength="10000"
+                  aria-describedby="job-description-count job-description-error"
+                ></textarea>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span class="form-error" id="job-description-error" role="alert"></span>
+                  <span class="form-hint" id="job-description-count" style="margin-left:auto;">0 / 10,000</span>
+                </div>
+              </div>
+
+              <div class="flex gap-md" style="margin-top:var(--space-sm);">
+                <button type="button" class="btn btn--primary" id="post-job-submit-btn" style="flex:1;" onclick="window.handlePostJobSubmit(event)">
+                  🚀 Publish Job
+                </button>
+                <button type="reset" class="btn btn--secondary" id="post-job-reset-btn" aria-label="Reset form">
+                  Reset
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: BROWSE JOBS (Seeker only)
+             data-view="browse-jobs"
+             Reuses the same job grid as index.html,
+             embedded inside the dashboard.
+        ══════════════════════════════════════════ -->
+        <section
+          class="dashboard-view seeker-view"
+          id="view-browse-jobs"
+          data-view="browse-jobs"
+          aria-labelledby="browse-jobs-heading"
+          style="display:none;"
+        >
+          <div class="section-header" style="margin-bottom:var(--space-lg);">
+            <h2 id="browse-jobs-heading">Browse Jobs</h2>
+          </div>
+
+          <!-- Inline search for dashboard browse -->
+          <form class="search-bar" id="dashboard-search-form" role="search" aria-label="Search jobs from dashboard" style="max-width:100%; margin-bottom:var(--space-xl);">
+            <div class="search-bar__field">
+              <span class="search-bar__field-icon" aria-hidden="true">🔍</span>
+              <input
+                type="search"
+                class="search-bar__input"
+                id="dashboard-search-keyword"
+                name="keyword"
+                placeholder="Job title, skills, or company…"
+                autocomplete="off"
+                aria-label="Search by keyword"
+              />
+            </div>
+            <div class="search-bar__divider" role="separator" aria-hidden="true"></div>
+            <div class="search-bar__field">
+              <span class="search-bar__field-icon" aria-hidden="true">📍</span>
+              <input
+                type="text"
+                class="search-bar__input"
+                id="dashboard-search-location"
+                name="location"
+                placeholder="Location"
+                autocomplete="off"
+                aria-label="Search by location"
+              />
+            </div>
+            <button type="submit" class="search-bar__submit" id="dashboard-search-submit" aria-label="Search jobs">
+              Search
+            </button>
+          </form>
+
+          <!-- Jobs grid (same structure as index.html, targeted by same JS module) -->
+          <div id="dashboard-jobs-grid" aria-label="Job listings" aria-live="polite">
+            <!-- Populated by JS -->
+          </div>
+
+          <div class="load-more-wrapper" id="dashboard-load-more-wrapper" style="display:none;">
+            <button class="btn btn--secondary" id="dashboard-load-more-btn">Load More Jobs</button>
+          </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: SAVED JOBS (Seeker only)
+             data-view="saved-jobs"
+        ══════════════════════════════════════════ -->
+        <section
+          class="dashboard-view seeker-view"
+          id="view-saved-jobs"
+          data-view="saved-jobs"
+          aria-labelledby="saved-jobs-heading"
+          style="display:none;"
+        >
+          <div class="section-header" style="margin-bottom:var(--space-lg);">
+            <h2 id="saved-jobs-heading">🔖 Saved Jobs</h2>
+            <button class="btn btn--ghost btn--sm" id="clear-saved-btn" aria-label="Clear all saved jobs">Clear All</button>
+          </div>
+          <div id="saved-jobs-grid" class="jobs-grid">
+            <!-- Populated by JS -->
+          </div>
+          <div id="saved-jobs-empty" style="display:none; text-align:center; padding:var(--space-xl); color:var(--text-muted);">
+            <div style="font-size:2.5rem; margin-bottom:var(--space-md)">🔖</div>
+            <p>No saved jobs yet. Browse jobs and click the bookmark icon to save them here.</p>
+            <button class="btn btn--primary btn--sm" style="margin-top:var(--space-md)" onclick="window.switchView('browse-jobs'); window.highlightNavGlobal('nav-browse-jobs')">🔍 Browse Jobs</button>
+          </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: ALERTS (Seeker only)
+             data-view="alerts"
+        ══════════════════════════════════════════ -->
+        <section
+          class="dashboard-view seeker-view"
+          id="view-alerts"
+          data-view="alerts"
+          aria-labelledby="alerts-heading"
+          style="display:none;"
+        >
+          <div class="section-header" style="margin-bottom:var(--space-lg);">
+            <h2 id="alerts-heading">🔔 Job Alerts</h2>
+            <p style="color:var(--text-muted); margin-top:var(--space-xs);">Get notified when new jobs match your criteria.</p>
+          </div>
+
+          <div class="dashboard-panel" style="margin-bottom:var(--space-xl);">
+            <h3>Create New Alert</h3>
+            <form id="create-alert-form" class="form-grid" style="margin-top:var(--space-md);">
+              <div class="form-group">
+                <label for="alert-keyword">Keyword or Job Title *</label>
+                <input type="text" id="alert-keyword" class="form-input" placeholder="e.g. Software Engineer" required>
+              </div>
+              <div class="form-group">
+                <label for="alert-location">Location (Optional)</label>
+                <input type="text" id="alert-location" class="form-input" placeholder="e.g. Remote, New York">
+              </div>
+              <div class="form-group" style="display:flex; align-items:flex-end;">
+                <button type="submit" class="btn btn--primary" id="alert-submit-btn" style="width:100%;">Create Alert</button>
+              </div>
+            </form>
+          </div>
+
+          <h3>Your Active Alerts</h3>
+          <div id="alerts-list" style="margin-top:var(--space-md); display:flex; flex-direction:column; gap:var(--space-md);">
+            <!-- Populated by JS -->
+          </div>
+          <div id="alerts-empty" style="display:none; text-align:center; padding:var(--space-xl); color:var(--text-muted);">
+            <div style="font-size:2.5rem; margin-bottom:var(--space-md)">🔕</div>
+            <p>You have no active job alerts.</p>
+          </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: ANALYTICS (Recruiter only)
+             data-view="analytics"
+        ══════════════════════════════════════════ -->
+        <section
+          class="dashboard-view recruiter-view"
+          id="view-analytics"
+          data-view="analytics"
+          aria-labelledby="analytics-heading"
+          style="display:none;"
+        >
+          <div class="section-header" style="margin-bottom:var(--space-lg);">
+            <h2 id="analytics-heading">📈 Hiring Analytics</h2>
+          </div>
+
+          <!-- Summary cards -->
+          <div class="stats-grid" style="margin-bottom:var(--space-xl);">
+            <div class="stat-card">
+              <div class="stat-card__header"><div class="stat-card__icon stat-card__icon--blue">📄</div></div>
+              <div class="stat-card__value" id="analytics-total-jobs">0</div>
+              <div class="stat-card__label">Total Jobs Posted</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__header"><div class="stat-card__icon stat-card__icon--green">👥</div></div>
+              <div class="stat-card__value" id="analytics-total-apps">0</div>
+              <div class="stat-card__label">Total Applications</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__header"><div class="stat-card__icon stat-card__icon--amber">⭐</div></div>
+              <div class="stat-card__value" id="analytics-shortlisted">0</div>
+              <div class="stat-card__label">Shortlisted</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__header"><div class="stat-card__icon stat-card__icon--green">✅</div></div>
+              <div class="stat-card__value" id="analytics-hired">0</div>
+              <div class="stat-card__label">Hired</div>
+            </div>
+          </div>
+
+          <!-- Charts row -->
+          <div class="analytics-charts-row">
+            <!-- Application funnel -->
+            <div class="dashboard-panel">
+              <h3 style="margin-bottom:var(--space-lg);">Application Funnel</h3>
+              <div id="funnel-chart" class="funnel-chart"></div>
+            </div>
+
+            <!-- Top jobs by applicants -->
+            <div class="dashboard-panel">
+              <h3 style="margin-bottom:var(--space-lg);">Top Jobs by Applicants</h3>
+              <div id="top-jobs-bars" class="top-jobs-bars"></div>
+            </div>
+          </div>
+
+          <!-- Job Type breakdown -->
+          <div class="dashboard-panel" style="margin-top:var(--space-lg);">
+            <h3 style="margin-bottom:var(--space-lg);">Status Breakdown per Job</h3>
+            <div id="status-breakdown-table"></div>
+          </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════
+             VIEW: MY PROFILE (shared, both roles)
+             data-view="profile"
+        ══════════════════════════════════════════ -->
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SHARED: INTERVIEWS
+        ═══════════════════════════════════════════════════════ -->
+        <section class="dashboard-view" id="view-interviews" data-view="interviews" aria-label="Interviews" style="display:none;">
+          <div class="dashboard-panel">
+            <div class="panel-header-row">
+              <h2 class="dashboard-panel__title">📅 My Interviews</h2>
+              <span class="text-muted" style="font-size:.85rem;">Pending and Scheduled Interviews</span>
+            </div>
+            <div id="interviews-container" class="interview-cards" style="margin-top:var(--space-md);"></div>
+          </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SEEKER: AI RESUME SCORE
+        ═══════════════════════════════════════════════════════ -->
+        <section class="dashboard-view seeker-view" id="view-ai-score" data-view="ai-score" aria-label="AI Resume Score" style="display:none;">
+          <div class="ai-score-layout">
+
+            <!-- Score ring -->
+            <div class="dashboard-panel ai-score-ring-panel">
+              <h2 class="dashboard-panel__title">🤖 AI Resume Score</h2>
+              <div class="score-ring-wrapper">
+                <svg class="score-ring" viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="score-ring__bg"  cx="60" cy="60" r="52" />
+                  <circle class="score-ring__fill" cx="60" cy="60" r="52" id="score-ring-fill" />
+                </svg>
+                <div class="score-ring__label">
+                  <span class="score-ring__number" id="ai-score-number">—</span>
+                  <span class="score-ring__unit">/ 100</span>
+                </div>
+              </div>
+              <p class="score-grade" id="ai-score-grade">Calculating…</p>
+            </div>
+
+            <!-- Categories + Tips -->
+            <div class="dashboard-panel ai-score-details-panel">
+              <h3 style="margin-bottom:var(--space-lg);">Category Breakdown</h3>
+              <div id="ai-score-categories"></div>
+              <hr class="divider" />
+              <h3 style="margin-bottom:var(--space-md);">💡 Improvement Tips</h3>
+              <ul class="ai-tips-list" id="ai-tips-list"></ul>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             SEEKER: PLACEMENT PREDICTOR
+        ═══════════════════════════════════════════════════════ -->
+        <section class="dashboard-view seeker-view" id="view-predictor" data-view="predictor" aria-label="Placement Predictor" style="display:none;">
+          <div class="predictor-layout">
+
+            <!-- Inputs -->
+            <div class="dashboard-panel predictor-inputs-panel">
+              <h2 class="dashboard-panel__title">📊 Placement Predictor</h2>
+              <p class="text-muted" style="margin-bottom:var(--space-xl);">Adjust the sliders to match your profile and see your placement probability.</p>
+
+              <div class="predictor-slider-group">
+                <label class="predictor-slider-label">CGPA <span id="slider-cgpa-val" class="slider-val">7.5</span></label>
+                <input type="range" class="predictor-slider" id="slider-cgpa" min="0" max="10" step="0.1" value="7.5" />
+              </div>
+              <div class="predictor-slider-group">
+                <label class="predictor-slider-label">Projects Count <span id="slider-projects-val" class="slider-val">2</span></label>
+                <input type="range" class="predictor-slider" id="slider-projects" min="0" max="20" step="1" value="2" />
+              </div>
+              <div class="predictor-slider-group">
+                <label class="predictor-slider-label">Certifications <span id="slider-certs-val" class="slider-val">1</span></label>
+                <input type="range" class="predictor-slider" id="slider-certs" min="0" max="20" step="1" value="1" />
+              </div>
+              <div class="predictor-slider-group">
+                <label class="predictor-slider-label">Skills Count <span id="slider-skills-val" class="slider-val">5</span></label>
+                <input type="range" class="predictor-slider" id="slider-skills" min="0" max="30" step="1" value="5" />
+              </div>
+              <div class="predictor-slider-group">
+                <label class="predictor-slider-label">Internship Months <span id="slider-exp-val" class="slider-val">0</span></label>
+                <input type="range" class="predictor-slider" id="slider-exp" min="0" max="24" step="1" value="0" />
+              </div>
+            </div>
+
+            <!-- Result -->
+            <div class="dashboard-panel predictor-result-panel">
+              <h3>Placement Probability</h3>
+              <div class="prob-gauge-wrapper">
+                <div class="prob-gauge" id="prob-gauge">
+                  <div class="prob-gauge__fill" id="prob-gauge-fill" style="height:0%"></div>
+                  <div class="prob-gauge__label">
+                    <span class="prob-gauge__pct" id="prob-pct">0%</span>
+                    <span class="prob-gauge__sub">probability</span>
+                  </div>
+                </div>
+              </div>
+              <hr class="divider" />
+              <h4 style="margin-bottom:var(--space-md);">🏢 Top Matching Companies</h4>
+              <ul class="company-match-list" id="company-match-list"></ul>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             SEEKER: CHAT & BOARD
+        ═══════════════════════════════════════════════════════ -->
+        <section class="dashboard-view seeker-view" id="view-chat" data-view="chat" aria-label="Chat and Board" style="display:none;">
+          <div class="chat-board-layout">
+
+            <div class="dashboard-panel">
+              <h2 class="dashboard-panel__title">📢 Announcements</h2>
+              <div class="announcement-list" id="announcement-list"></div>
+            </div>
+
+            <div class="dashboard-panel">
+              <h2 class="dashboard-panel__title">💡 Career Tips Feed</h2>
+              <div class="tips-feed" id="tips-feed"></div>
+            </div>
+
+            <div class="dashboard-panel">
+              <h2 class="dashboard-panel__title">🗓️ Upcoming Events</h2>
+              <div class="events-list" id="events-list"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             SHARED: MY PROFILE (completely overhauled)
+        ═══════════════════════════════════════════════════════ -->
+        <section
+          class="dashboard-view"
+          id="view-profile"
+          data-view="profile"
+          aria-labelledby="profile-heading"
+          style="display:none;"
+        >
+          <!-- Profile completion bar (seeker only) -->
+          <div class="seeker-view completion-bar-panel" id="profile-completion-wrap">
+            <div class="completion-header">
+              <span class="completion-label">Profile Completion</span>
+              <span class="completion-pct" id="completion-pct">0%</span>
+            </div>
+            <div class="completion-track">
+              <div class="completion-fill" id="completion-fill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <!-- ── SEEKER two-column top section ──────────────────── -->
+          <div class="seeker-view profile-top-grid" id="seeker-profile-top-grid">
+
+            <!-- Resume upload card -->
+            <div class="dashboard-panel profile-resume-card">
+              <h3 class="profile-section-title">📄 Resume PDF File</h3>
+              <div class="resume-preview-box" id="resume-preview-box">
+                <p class="text-muted" style="font-size:.85rem;margin:0;">No PDF uploaded. Mandatory for applying to active campus jobs.</p>
+              </div>
+              <p class="profile-upload-label">UPLOAD NEW RESUME</p>
+              <div class="resume-upload-row">
+                <label class="file-label" for="resume-file-input" id="resume-file-label">Choose File</label>
+                <input type="file" id="resume-file-input" accept=".pdf" style="display:none;" aria-label="Upload resume PDF" />
+                <span class="file-name-display" id="file-name-display">No file chosen</span>
+              </div>
+              <button class="btn btn--primary btn--full" id="resume-upload-btn" style="margin-top:var(--space-md);">⬆ Upload PDF Document</button>
+            </div>
+
+            <!-- Academic info card -->
+            <div class="dashboard-panel profile-academic-card">
+              <h3 class="profile-section-title">🎓 Academic Information</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="acad-fullname">Student Full Name</label>
+                  <input type="text" class="form-control" id="acad-fullname" placeholder="Your name" readonly aria-label="Full name (read-only)" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="acad-roll">Roll Number / UID</label>
+                  <input type="text" class="form-control" id="acad-roll" name="rollNumber" placeholder="e.g. STU-G-02129" aria-label="Roll number or UID" />
+                </div>
+              </div>
+              <div class="form-row" style="grid-template-columns:1fr 1fr 1fr;">
+                <div class="form-group">
+                  <label class="form-label" for="acad-cgpa">Current CGPA</label>
+                  <input type="number" class="form-control" id="acad-cgpa" name="cgpa" min="0" max="10" step="0.01" placeholder="8.5" aria-label="CGPA" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="acad-backlogs">Active Backlogs</label>
+                  <input type="number" class="form-control" id="acad-backlogs" name="activeBacklogs" min="0" placeholder="0" aria-label="Active backlogs count" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="acad-grad-year">Graduation Year</label>
+                  <input type="number" class="form-control" id="acad-grad-year" name="graduationYear" min="2020" max="2035" placeholder="2026" aria-label="Graduation year" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="acad-10th">10th Percentage (%)</label>
+                  <input type="number" class="form-control" id="acad-10th" name="percentage10th" min="0" max="100" step="0.01" placeholder="92.5" aria-label="10th percentage" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="acad-12th">12th Percentage (%)</label>
+                  <input type="number" class="form-control" id="acad-12th" name="percentage12th" min="0" max="100" step="0.01" placeholder="88.0" aria-label="12th percentage" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="acad-dept">Department / Branch</label>
+                <select class="form-control" id="acad-dept" name="department" aria-label="Department or branch">
+                  <option value="">Select department…</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Electronics &amp; Communication">Electronics &amp; Communication</option>
+                  <option value="Electrical Engineering">Electrical Engineering</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Chemical Engineering">Chemical Engineering</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Artificial Intelligence">Artificial Intelligence</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="acad-skills">Skills (comma separated, e.g. React, Node.js, Python)</label>
+                <input type="text" class="form-control" id="acad-skills" name="skills" placeholder="React, CSS, Git, PostgreSQL" aria-label="Skills comma separated" />
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ── Dynamic row tables (Seeker only) ───────────────── -->
+
+          <!-- Projects -->
+          <div class="dashboard-panel addrow-panel seeker-view" id="projects-panel">
+            <div class="addrow-header">
+              <h3 class="profile-section-title">📚 Academic / Personal Projects</h3>
+              <button class="btn btn--ghost btn--sm" id="add-project-btn" aria-label="Add a project row">+ Add Row</button>
+            </div>
+            <div class="addrow-table-wrap">
+              <table class="addrow-table" id="projects-table" aria-label="Projects table">
+                <thead>
+                  <tr>
+                    <th>Project Title</th>
+                    <th>Description</th>
+                    <th>Tech Stack</th>
+                    <th>Link</th>
+                    <th aria-label="Delete"></th>
+                  </tr>
+                </thead>
+                <tbody id="projects-body">
+                  <tr id="projects-empty-row"><td colspan="5" class="addrow-empty">No projects registered yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Certifications -->
+          <div class="dashboard-panel addrow-panel seeker-view" id="certs-panel">
+            <div class="addrow-header">
+              <h3 class="profile-section-title">🏅 Certifications</h3>
+              <button class="btn btn--ghost btn--sm" id="add-cert-btn" aria-label="Add a certification row">+ Add Row</button>
+            </div>
+            <div class="addrow-table-wrap">
+              <table class="addrow-table" id="certs-table" aria-label="Certifications table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Issuer</th>
+                    <th>Date</th>
+                    <th>Link</th>
+                    <th aria-label="Delete"></th>
+                  </tr>
+                </thead>
+                <tbody id="certs-body">
+                  <tr id="certs-empty-row"><td colspan="5" class="addrow-empty">No certifications registered yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Work Experience -->
+          <div class="dashboard-panel addrow-panel seeker-view" id="work-panel">
+            <div class="addrow-header">
+              <h3 class="profile-section-title">💼 Work / Internship Experience</h3>
+              <button class="btn btn--ghost btn--sm" id="add-work-btn" aria-label="Add a work experience row">+ Add Row</button>
+            </div>
+            <div class="addrow-table-wrap">
+              <table class="addrow-table" id="work-table" aria-label="Work experience table">
+                <thead>
+                  <tr>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Duration</th>
+                    <th>Description</th>
+                    <th aria-label="Delete"></th>
+                  </tr>
+                </thead>
+                <tbody id="work-body">
+                  <tr id="work-empty-row"><td colspan="5" class="addrow-empty">No internship experiences registered.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Recruiter profile card -->
+          <div class="recruiter-view dashboard-panel" id="recruiter-profile-card">
+            <h2 class="dashboard-panel__title" id="profile-heading">🏢 Company Profile</h2>
+
+            <div class="auth-alert auth-alert--success" id="profile-success" role="status" aria-live="polite"></div>
+            <div class="auth-alert auth-alert--error" id="profile-error" role="alert" aria-live="assertive"></div>
+
+            <form id="profile-form" class="auth-form" novalidate>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="profile-first-name">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="profile-first-name"
+                    name="firstName"
+                    maxlength="50"
+                    aria-label="First name"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profile-last-name">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="profile-last-name"
+                    name="lastName"
+                    maxlength="50"
+                    aria-label="Last name"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="profile-email">Email Address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="profile-email"
+                  name="email"
+                  disabled
+                  aria-label="Email address (read-only)"
+                  title="Email cannot be changed"
+                />
+                <span class="form-hint">Email address cannot be changed.</span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="profile-phone">Phone Number</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="profile-phone"
+                    name="phone"
+                    placeholder="+1 555 000 0000"
+                    aria-label="Phone number"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profile-location">Location</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="profile-location"
+                    name="location"
+                    placeholder="City, Country"
+                    aria-label="Location"
+                  />
+                </div>
+              </div>
+
+              <!-- Seeker-specific profile fields -->
+              <div class="seeker-view" id="seeker-profile-fields">
+                <hr class="divider" aria-hidden="true" />
+
+                <div class="form-group">
+                  <label class="form-label" for="profile-bio">Bio / Summary</label>
+                  <textarea
+                    class="form-control"
+                    id="profile-bio"
+                    name="bio"
+                    placeholder="A short summary about yourself, your experience, and what you're looking for…"
+                    rows="4"
+                    maxlength="1000"
+                    aria-label="Bio or summary"
+                  ></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="profile-skills">Skills</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="profile-skills"
+                    name="skills"
+                    placeholder="React, Node.js, Python (comma-separated)"
+                    aria-label="Skills"
+                  />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="profile-experience">Experience</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="profile-experience"
+                      name="experience"
+                      placeholder="e.g. 3 years"
+                      aria-label="Years of experience"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="profile-education">Education</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="profile-education"
+                      name="education"
+                      placeholder="e.g. B.Sc. Computer Science"
+                      aria-label="Education"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recruiter-specific profile fields -->
+              <div class="recruiter-view" id="recruiter-profile-fields">
+                <hr class="divider" aria-hidden="true" />
+
+                <div class="form-group">
+                  <label class="form-label" for="profile-company-name">Company Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="profile-company-name"
+                    name="companyName"
+                    maxlength="150"
+                    aria-label="Company name"
+                  />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="profile-company-website">Company Website</label>
+                    <input
+                      type="url"
+                      class="form-control"
+                      id="profile-company-website"
+                      name="companyWebsite"
+                      placeholder="https://yourcompany.com"
+                      aria-label="Company website"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="profile-industry">Industry</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="profile-industry"
+                      name="industry"
+                      placeholder="e.g. FinTech, SaaS"
+                      aria-label="Industry"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="profile-company-size">Company Size</label>
+                  <select class="form-control" id="profile-company-size" name="companySize" aria-label="Company size">
+                    <option value="">Select size…</option>
+                    <option value="1-10">1–10 employees</option>
+                    <option value="11-50">11–50 employees</option>
+                    <option value="51-200">51–200 employees</option>
+                    <option value="201-500">201–500 employees</option>
+                    <option value="501-1000">501–1,000 employees</option>
+                    <option value="1000+">1,000+ employees</option>
+                  </select>
+                </div>
+              </div>
+
+
+              <button type="submit" class="btn btn--primary" id="profile-save-btn" style="margin-top:var(--space-sm);">
+                💾 Save Company Profile
+              </button>
+
+            </form>
+          </div>
+          <!-- / recruiter-profile-card -->
+
+          <!-- Seeker Save button (full-width, outside the recruiter card) -->
+          <div class="seeker-view profile-save-row">
+            <button class="btn btn--primary btn--lg" id="save-full-profile-btn">
+              💾 Save Complete Profile
+            </button>
+          </div>
+
+        </section>
+
+
+      </div>
+      <!-- / #dashboard-content -->
+
+    </div>
+    <!-- / .dashboard-main -->
+
+  </div>
+  <!-- / .dashboard-page -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       APPLY MODAL (Seeker: apply for a job from dashboard)
+  ═══════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="apply-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="apply-modal-title" style="display:none;">
+    <div class="modal" id="apply-modal">
+      <div class="modal__header">
+        <h2 class="modal__title" id="apply-modal-title">Apply for Job</h2>
+        <button class="modal__close" id="apply-modal-close-btn" aria-label="Close apply modal">✕</button>
+      </div>
+      <p id="apply-modal-job-name" style="color:var(--text-secondary); font-size:.875rem; margin-bottom:var(--space-lg);"></p>
+      <input type="hidden" id="apply-job-id" />
+      <form id="apply-form" class="auth-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="cover-letter">Cover Letter <span style="color:var(--text-muted);font-size:.8rem;">(optional)</span></label>
+          <textarea
+            class="form-control"
+            id="cover-letter"
+            name="coverLetter"
+            rows="5"
+            maxlength="5000"
+            placeholder="Introduce yourself and explain why you're a great fit for this role…"
+            aria-label="Cover letter"
+          ></textarea>
+          <span class="form-hint" id="cover-letter-count" style="text-align:right; display:block;">0 / 5,000 characters</span>
+        </div>
+        <div class="auth-alert auth-alert--error" id="apply-error" role="alert"></div>
+        <button type="submit" class="btn btn--primary btn--full" id="apply-submit-btn">🚀 Submit Application</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       STATUS UPDATE MODAL (Recruiter: update applicant)
+  ═══════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="status-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="status-modal-title">
+    <div class="modal" id="status-modal">
+      <div class="modal__header">
+        <h2 class="modal__title" id="status-modal-title">Update Application Status</h2>
+        <button class="modal__close" id="status-modal-close" aria-label="Close status modal">✕</button>
+      </div>
+
+      <p id="status-modal-applicant" style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:var(--space-lg); max-width:100%;"></p>
+
+      <form id="status-update-form" class="auth-form" novalidate>
+        <input type="hidden" id="status-application-id" name="applicationId" />
+
+        <div class="form-group">
+          <label class="form-label" for="status-select">New Status <span class="required" aria-label="required">*</span></label>
+          <select class="form-control" id="status-select" name="status" required aria-label="Select new application status">
+            <option value="" disabled selected>Choose a status…</option>
+            <option value="pending">⏳ Pending</option>
+            <option value="reviewed">📋 Reviewed</option>
+            <option value="shortlisted">⭐ Shortlisted</option>
+            <option value="accepted">✅ Accepted</option>
+            <option value="rejected">❌ Rejected</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="recruiter-notes-input">
+            Internal Notes (private — applicant won't see these)
+          </label>
+          <textarea
+            class="form-control"
+            id="recruiter-notes-input"
+            name="recruiterNotes"
+            rows="3"
+            maxlength="2000"
+            placeholder="e.g. Strong technical skills, schedule for final interview…"
+            aria-label="Private recruiter notes"
+          ></textarea>
+        </div>
+
+        <div class="auth-alert auth-alert--error" id="status-modal-error" role="alert"></div>
+
+        <button type="submit" class="btn btn--primary btn--full" id="status-modal-submit-btn">
+          Update Status
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       SCHEDULE INTERVIEW MODAL (Recruiter)
+  ═══════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="schedule-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="schedule-modal-title">
+    <div class="modal" id="schedule-modal">
+      <div class="modal__header">
+        <h2 class="modal__title" id="schedule-modal-title">Schedule Interview</h2>
+        <button class="modal__close" id="schedule-modal-close" aria-label="Close schedule modal">✕</button>
+      </div>
+
+      <p id="schedule-modal-applicant" style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:var(--space-lg); max-width:100%;"></p>
+
+      <form id="schedule-interview-form" class="auth-form" novalidate>
+        <input type="hidden" id="schedule-application-id" name="applicationId" />
+
+        <div class="form-group">
+          <label class="form-label">Proposed Time Slots (Provide up to 3) <span class="required">*</span></label>
+          <input type="datetime-local" class="form-control" id="schedule-time-1" required style="margin-bottom:var(--space-xs);">
+          <input type="datetime-local" class="form-control" id="schedule-time-2" style="margin-bottom:var(--space-xs);">
+          <input type="datetime-local" class="form-control" id="schedule-time-3">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="schedule-meeting-link">Meeting Link (Zoom, Google Meet, etc.) <span class="required">*</span></label>
+          <input type="url" class="form-control" id="schedule-meeting-link" required placeholder="https://zoom.us/j/123456789">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="schedule-notes">Instructions / Notes (Optional)</label>
+          <textarea class="form-control" id="schedule-notes" rows="2" placeholder="e.g. Please prepare a 5-minute presentation."></textarea>
+        </div>
+
+        <div class="auth-alert auth-alert--error" id="schedule-modal-error" role="alert" style="display:none;"></div>
+
+        <button type="submit" class="btn btn--primary btn--full" id="schedule-modal-submit-btn">
+          Send Interview Request
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       SIDEBAR OVERLAY (mobile tap-to-close)
+  ═══════════════════════════════════════════════ -->
+  <div
+    id="sidebar-overlay"
+    style="
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 149;
+    "
+    aria-hidden="true"
+  ></div>
+
+
+  <!-- Toast container -->
+  <div id="toast-container" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+  <!-- JS (Phase 5) -->
+  <script src="js/api.js" defer></script>
+  <script src="js/dashboard.js?v=13" defer></script>
+</body>
+</html>

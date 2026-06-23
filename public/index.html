@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TalentSync — Find your next career opportunity. Browse thousands of tech, engineering, design, and business jobs from top companies worldwide." />
+  <meta name="theme-color" content="#060d1f" />
+
+  <title>TalentSync — Find Your Next Opportunity</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Global Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar__inner">
+
+      <!-- Logo -->
+      <a href="index.html" class="navbar__logo" aria-label="TalentSync home">
+        <div class="navbar__logo-icon" aria-hidden="true">⚡</div>
+        Talent<span>Sync</span>
+      </a>
+
+      <!-- Center nav links -->
+      <ul class="navbar__nav" id="main-nav">
+        <li><a href="index.html" class="navbar__nav-link active" id="nav-home">Browse Jobs</a></li>
+        <li><a href="#companies-section" class="navbar__nav-link" id="nav-companies">Companies</a></li>
+        <li><a href="#categories-section" class="navbar__nav-link" id="nav-categories">Categories</a></li>
+      </ul>
+
+      <!-- Right actions -->
+      <div class="navbar__actions">
+        <!-- Shown when NOT logged in -->
+        <div id="nav-guest-actions">
+          <a href="login.html" class="btn btn--secondary btn--sm" id="btn-nav-login">Log In</a>
+          <a href="register.html" class="btn btn--primary btn--sm" id="btn-nav-register">Get Started</a>
+        </div>
+
+        <!-- Shown when logged in (hidden by default, revealed by JS) -->
+        <div id="nav-auth-actions" style="display:none;">
+          <a href="dashboard.html" class="navbar__user" id="nav-user-pill" aria-label="Go to dashboard">
+            <div class="navbar__avatar" id="nav-avatar" aria-hidden="true">JD</div>
+            <span id="nav-username">Jane D.</span>
+          </a>
+        </div>
+
+        <!-- Hamburger (mobile) -->
+        <button class="navbar__hamburger" id="hamburger-btn" aria-label="Toggle mobile menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+
+  <!-- ═══════════════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════════════ -->
+  <section class="hero" id="hero-section" aria-labelledby="hero-title">
+    <div class="hero__inner">
+
+      <div class="hero__eyebrow" aria-label="Actively hiring">
+        <span aria-hidden="true">🟢</span> 2,400+ jobs actively hiring
+      </div>
+
+      <h1 class="hero__title" id="hero-title">
+        Find Work That<br />
+        <span class="hero__title-highlight">Matches Your Ambition</span>
+      </h1>
+
+      <p class="hero__subtitle">
+        Connect with top companies hiring right now. One profile, hundreds of opportunities — built for seekers and recruiters alike.
+      </p>
+
+      <!-- Search Bar -->
+      <form class="search-bar" id="search-form" role="search" aria-label="Job search">
+
+        <!-- Keyword field -->
+        <div class="search-bar__field">
+          <span class="search-bar__field-icon" aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            class="search-bar__input"
+            id="search-keyword"
+            name="keyword"
+            placeholder="Job title, skills, or company…"
+            autocomplete="off"
+            aria-label="Search by keyword"
+          />
+        </div>
+
+        <div class="search-bar__divider" role="separator" aria-hidden="true"></div>
+
+        <!-- Location field -->
+        <div class="search-bar__field">
+          <span class="search-bar__field-icon" aria-hidden="true">📍</span>
+          <input
+            type="text"
+            class="search-bar__input"
+            id="search-location"
+            name="location"
+            placeholder="Location or Remote"
+            autocomplete="off"
+            aria-label="Search by location"
+          />
+        </div>
+
+        <button type="submit" class="search-bar__submit" id="search-submit-btn" aria-label="Search jobs">
+          <span aria-hidden="true">→</span> Search Jobs
+        </button>
+
+      </form>
+
+      <!-- Quick filter tags -->
+      <div class="search-filters" role="group" aria-label="Quick filters">
+        <span class="search-filters__label">Popular:</span>
+        <button class="filter-tag" data-filter="remote" aria-pressed="false">🌍 Remote</button>
+        <button class="filter-tag" data-filter="full-time" aria-pressed="false">💼 Full-time</button>
+        <button class="filter-tag" data-filter="engineering" aria-pressed="false">⚙️ Engineering</button>
+        <button class="filter-tag" data-filter="design" aria-pressed="false">🎨 Design</button>
+        <button class="filter-tag" data-filter="product" aria-pressed="false">📦 Product</button>
+        <button class="filter-tag" data-filter="finance" aria-pressed="false">💰 Finance</button>
+      </div>
+
+      <!-- Social proof stats -->
+      <div class="hero__stats" aria-label="Platform statistics">
+        <div class="hero__stat">
+          <div class="hero__stat-value" id="stat-jobs">12,500+</div>
+          <div class="hero__stat-label">Active Listings</div>
+        </div>
+        <div class="hero__stat-divider" role="separator" aria-hidden="true"></div>
+        <div class="hero__stat">
+          <div class="hero__stat-value" id="stat-companies">3,200+</div>
+          <div class="hero__stat-label">Companies</div>
+        </div>
+        <div class="hero__stat-divider" role="separator" aria-hidden="true"></div>
+        <div class="hero__stat">
+          <div class="hero__stat-value" id="stat-hires">48,000+</div>
+          <div class="hero__stat-label">Hires Made</div>
+        </div>
+        <div class="hero__stat-divider" role="separator" aria-hidden="true"></div>
+        <div class="hero__stat">
+          <div class="hero__stat-value" id="stat-seekers">180K+</div>
+          <div class="hero__stat-label">Job Seekers</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       JOBS LISTING SECTION
+  ═══════════════════════════════════════════════ -->
+  <main id="main-content">
+    <section class="section" id="jobs-section" aria-labelledby="jobs-section-title">
+      <div class="container">
+
+        <!-- Section header with result count + sort -->
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" id="jobs-section-title">
+              Latest <span>Opportunities</span>
+            </h2>
+            <p id="jobs-result-count" aria-live="polite" aria-atomic="true">
+              Loading jobs…
+            </p>
+          </div>
+
+          <!-- Sort control -->
+          <div class="flex items-center gap-md">
+            <label for="sort-select" class="form-label" style="white-space:nowrap;margin:0;">Sort by</label>
+            <select id="sort-select" class="form-control" style="width:auto;" aria-label="Sort jobs">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="salary_desc">Salary: High → Low</option>
+              <option value="salary_asc">Salary: Low → High</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ── JOBS GRID ──────────────────────────────────
+             JS populates this with .job-card elements.
+             Class names are intentionally stable for querySelector.
+        ─────────────────────────────────────────────── -->
+        <div id="jobs-grid" aria-label="Job listings" aria-live="polite">
+
+          <!-- Skeleton loaders — replaced by real cards on data load -->
+          <article class="job-card job-card--skeleton" aria-hidden="true">
+            <div class="skeleton-line wide"></div>
+            <div class="skeleton-line mid"></div>
+            <div class="skeleton-line short"></div>
+          </article>
+          <article class="job-card job-card--skeleton" aria-hidden="true">
+            <div class="skeleton-line wide"></div>
+            <div class="skeleton-line mid"></div>
+            <div class="skeleton-line short"></div>
+          </article>
+          <article class="job-card job-card--skeleton" aria-hidden="true">
+            <div class="skeleton-line wide"></div>
+            <div class="skeleton-line mid"></div>
+            <div class="skeleton-line short"></div>
+          </article>
+          <article class="job-card job-card--skeleton" aria-hidden="true">
+            <div class="skeleton-line wide"></div>
+            <div class="skeleton-line mid"></div>
+            <div class="skeleton-line short"></div>
+          </article>
+          <article class="job-card job-card--skeleton" aria-hidden="true">
+            <div class="skeleton-line wide"></div>
+            <div class="skeleton-line mid"></div>
+            <div class="skeleton-line short"></div>
+          </article>
+          <article class="job-card job-card--skeleton" aria-hidden="true">
+            <div class="skeleton-line wide"></div>
+            <div class="skeleton-line mid"></div>
+            <div class="skeleton-line short"></div>
+          </article>
+
+        </div>
+        <!-- / #jobs-grid -->
+
+        <!-- Pagination / Load More -->
+        <div class="load-more-wrapper" id="load-more-wrapper" style="display:none;">
+          <button class="btn btn--secondary" id="load-more-btn" aria-label="Load more job listings">
+            Load More Jobs
+          </button>
+          <p id="pagination-info" class="text-muted" style="margin-top:var(--space-sm);font-size:0.8rem;max-width:100%;"></p>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════
+         CATEGORIES SECTION
+    ═══════════════════════════════════════════════ -->
+    <section class="section" id="categories-section" aria-labelledby="categories-title" style="background: var(--bg-surface); border-top: 1px solid var(--border-subtle);">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="categories-title">Browse by <span>Category</span></h2>
+        </div>
+
+        <div class="stats-grid" id="categories-grid" role="list">
+
+          <button class="stat-card" data-category="Engineering" role="listitem" aria-label="Browse Engineering jobs">
+            <div class="stat-card__header">
+              <div class="stat-card__icon stat-card__icon--blue">⚙️</div>
+            </div>
+            <div class="stat-card__value">2,340</div>
+            <div class="stat-card__label">Engineering</div>
+          </button>
+
+          <button class="stat-card" data-category="Design" role="listitem" aria-label="Browse Design jobs">
+            <div class="stat-card__header">
+              <div class="stat-card__icon stat-card__icon--amber">🎨</div>
+            </div>
+            <div class="stat-card__value">890</div>
+            <div class="stat-card__label">Design</div>
+          </button>
+
+          <button class="stat-card" data-category="Product" role="listitem" aria-label="Browse Product jobs">
+            <div class="stat-card__header">
+              <div class="stat-card__icon stat-card__icon--green">📦</div>
+            </div>
+            <div class="stat-card__value">1,120</div>
+            <div class="stat-card__label">Product</div>
+          </button>
+
+          <button class="stat-card" data-category="Marketing" role="listitem" aria-label="Browse Marketing jobs">
+            <div class="stat-card__header">
+              <div class="stat-card__icon stat-card__icon--red">📣</div>
+            </div>
+            <div class="stat-card__value">670</div>
+            <div class="stat-card__label">Marketing</div>
+          </button>
+
+          <button class="stat-card" data-category="Finance" role="listitem" aria-label="Browse Finance jobs">
+            <div class="stat-card__header">
+              <div class="stat-card__icon stat-card__icon--green">💰</div>
+            </div>
+            <div class="stat-card__value">540</div>
+            <div class="stat-card__label">Finance</div>
+          </button>
+
+          <button class="stat-card" data-category="Data" role="listitem" aria-label="Browse Data & Analytics jobs">
+            <div class="stat-card__header">
+              <div class="stat-card__icon stat-card__icon--blue">📊</div>
+            </div>
+            <div class="stat-card__value">980</div>
+            <div class="stat-card__label">Data & Analytics</div>
+          </button>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ═══════════════════════════════════════════════
+       JOB DETAIL MODAL (opened by JS on card click)
+  ═══════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="job-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-job-title">
+    <div class="modal" id="job-modal">
+
+      <div class="modal__header">
+        <div>
+          <h2 class="modal__title" id="modal-job-title">Job Title</h2>
+          <p id="modal-company-name" style="color:var(--text-muted);font-size:0.875rem;margin-top:4px;max-width:100%;"></p>
+        </div>
+        <button class="modal__close" id="modal-close-btn" aria-label="Close job details">✕</button>
+      </div>
+
+      <div class="flex gap-sm" style="flex-wrap:wrap; margin-bottom:var(--space-lg);" id="modal-badges">
+        <!-- Populated by JS -->
+      </div>
+
+      <div id="modal-job-description" style="color:var(--text-secondary); font-size:0.9rem; line-height:1.7; margin-bottom:var(--space-xl);">
+        <!-- Populated by JS -->
+      </div>
+
+      <div id="modal-job-meta" style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-md); margin-bottom:var(--space-xl);">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="flex gap-md">
+        <button class="btn btn--primary btn--full" id="modal-apply-btn" aria-label="Apply for this job">
+          Apply Now
+        </button>
+        <button class="btn btn--secondary" id="modal-save-btn" aria-label="Save this job">
+          🔖 Save
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       APPLY MODAL (seeker cover letter form)
+  ═══════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="apply-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="apply-modal-title">
+    <div class="modal" id="apply-modal">
+      <div class="modal__header">
+        <h2 class="modal__title" id="apply-modal-title">Submit Application</h2>
+        <button class="modal__close" id="apply-modal-close-btn" aria-label="Close apply form">✕</button>
+      </div>
+
+      <p id="apply-modal-job-name" style="color:var(--text-muted);font-size:0.9rem;margin-bottom:var(--space-lg);max-width:100%;"></p>
+
+      <form id="apply-form" class="auth-form" novalidate>
+        <input type="hidden" id="apply-job-id" name="jobId" />
+
+        <div class="form-group">
+          <label class="form-label" for="cover-letter">Cover Letter</label>
+          <textarea
+            class="form-control"
+            id="cover-letter"
+            name="coverLetter"
+            placeholder="Tell the recruiter why you're a great fit for this role…"
+            rows="6"
+            maxlength="5000"
+          ></textarea>
+          <span class="form-hint" id="cover-letter-count">0 / 5000 characters</span>
+        </div>
+
+        <div class="auth-alert auth-alert--error" id="apply-error" role="alert"></div>
+
+        <button type="submit" class="btn btn--primary btn--full" id="apply-submit-btn">
+          Submit Application
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════ -->
+  <footer style="background: var(--bg-surface); border-top: 1px solid var(--border-subtle); padding-block: var(--space-xl);" role="contentinfo">
+    <div class="container">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:var(--space-md);">
+        <a href="index.html" class="navbar__logo">
+          <div class="navbar__logo-icon" aria-hidden="true">⚡</div>
+          Talent<span>Sync</span>
+        </a>
+        <p style="max-width:100%; color:var(--text-muted); font-size:0.8rem;">
+          &copy; 2026 TalentSync. Built with ❤️ as a portfolio project.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- Toast container (managed by JS) -->
+  <div id="toast-container" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+  <!-- JS (Phase 5) -->
+  <script src="js/api.js" defer></script>
+  <script src="js/jobs.js" defer></script>
+</body>
+</html>

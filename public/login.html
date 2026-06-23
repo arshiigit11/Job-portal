@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Log in to your TalentSync account to browse jobs, manage applications, and connect with top employers." />
+  <meta name="robots" content="noindex" />
+
+  <title>Log In — TalentSync</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="auth-page">
+
+    <!-- ═══════════════════════════════════════════════
+         LEFT — Brand Panel
+    ═══════════════════════════════════════════════ -->
+    <aside class="auth-panel auth-panel--brand" aria-label="Brand information">
+
+      <!-- Logo -->
+      <a href="index.html" class="auth-brand__logo" aria-label="TalentSync home">
+        <div class="navbar__logo-icon" aria-hidden="true">⚡</div>
+        Talent<span>Sync</span>
+      </a>
+
+      <h2 class="auth-brand__headline">
+        Your next great<br />
+        role is <span>one click away</span>
+      </h2>
+
+      <p class="auth-brand__sub">
+        Log in and pick up right where you left off. Your dashboard, applications, and saved jobs are waiting.
+      </p>
+
+      <!-- Feature list -->
+      <ul class="auth-brand__features" aria-label="Platform features">
+        <li class="auth-brand__feature">
+          <div class="auth-brand__feature-icon" aria-hidden="true">🔍</div>
+          <span>Browse 12,500+ live job listings in real-time</span>
+        </li>
+        <li class="auth-brand__feature">
+          <div class="auth-brand__feature-icon" aria-hidden="true">📨</div>
+          <span>Track every application and its status in one place</span>
+        </li>
+        <li class="auth-brand__feature">
+          <div class="auth-brand__feature-icon" aria-hidden="true">🔔</div>
+          <span>Get notified instantly when recruiters respond</span>
+        </li>
+        <li class="auth-brand__feature">
+          <div class="auth-brand__feature-icon" aria-hidden="true">🔒</div>
+          <span>Secure, JWT-protected accounts with role-based access</span>
+        </li>
+      </ul>
+
+    </aside>
+
+
+    <!-- ═══════════════════════════════════════════════
+         RIGHT — Login Form
+    ═══════════════════════════════════════════════ -->
+    <main class="auth-panel auth-panel--form" id="login-main">
+      <div class="auth-form-container animate-fade-in">
+
+        <!-- Back to home -->
+        <a href="index.html" class="btn btn--ghost btn--sm" style="margin-bottom:var(--space-xl); align-self:flex-start;" aria-label="Back to home page">
+          ← Home
+        </a>
+
+        <h1>Welcome back</h1>
+        <p class="auth-subtitle">
+          Don't have an account?
+          <a href="register.html" id="link-to-register">Create one free →</a>
+        </p>
+
+        <!-- API error / success alert -->
+        <div class="auth-alert auth-alert--error" id="login-alert" role="alert" aria-live="assertive"></div>
+
+        <form class="auth-form" id="login-form" novalidate autocomplete="on">
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="login-email">
+              Email address <span class="required" aria-label="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">✉</span>
+              <input
+                type="email"
+                class="form-control"
+                id="login-email"
+                name="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+                aria-required="true"
+                aria-describedby="login-email-error"
+              />
+            </div>
+            <span class="form-error" id="login-email-error" role="alert"></span>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <label class="form-label" for="login-password">
+                Password <span class="required" aria-label="required">*</span>
+              </label>
+              <a href="#" class="form-hint" id="forgot-password-link" style="color:var(--accent);">Forgot password?</a>
+            </div>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">🔑</span>
+              <input
+                type="password"
+                class="form-control"
+                id="login-password"
+                name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+                aria-required="true"
+                aria-describedby="login-password-error"
+              />
+              <button
+                type="button"
+                class="input-toggle"
+                id="toggle-login-password"
+                aria-label="Toggle password visibility"
+                aria-pressed="false"
+              >👁</button>
+            </div>
+            <span class="form-error" id="login-password-error" role="alert"></span>
+          </div>
+
+          <!-- Remember me -->
+          <div class="flex items-center gap-sm">
+            <input
+              type="checkbox"
+              id="remember-me"
+              name="rememberMe"
+              style="accent-color: var(--accent); width:16px; height:16px; cursor:pointer;"
+            />
+            <label for="remember-me" style="font-size:0.875rem; color:var(--text-secondary); cursor:pointer;">
+              Keep me logged in
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn--primary btn--full btn--lg" id="login-submit-btn">
+            Log In
+          </button>
+
+        </form>
+
+        <div class="auth-divider">or continue with</div>
+
+        <!-- OAuth buttons -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-sm);">
+          <button class="btn btn--secondary" id="oauth-google-btn" type="button" aria-label="Sign in with Google">
+            <span style="font-size:1rem;">🌐</span> Google
+          </button>
+          <button class="btn btn--secondary" id="oauth-github-btn" type="button" aria-label="Sign in with GitHub">
+            <span style="font-size:1rem;">🐙</span> GitHub
+          </button>
+        </div>
+
+        <p class="auth-footer-link">
+          New to TalentSync?
+          <a href="register.html" id="link-create-account">Create a free account →</a>
+        </p>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+  <script src="js/api.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      // OAuth coming-soon toasts
+      const oauthMsg = '🔒 OAuth login is coming soon! Please use email & password for now.';
+      document.getElementById('oauth-google-btn')?.addEventListener('click', () => {
+        Toast.info(oauthMsg);
+      });
+      document.getElementById('oauth-github-btn')?.addEventListener('click', () => {
+        Toast.info(oauthMsg);
+      });
+      // Forgot password toast
+      document.getElementById('forgot-password-link')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        Toast.info('🔑 Password reset is coming soon! Please contact support for now.');
+      });
+    });
+  </script>
+</body>
+</html>
