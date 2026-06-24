@@ -14,6 +14,7 @@ const connectDB  = require('./src/config/db');
 
 // ─── Initialize Express App ───────────────────────────────────────────────────
 const app = express();
+app.set('trust proxy', 1);
 
 // ─── Connect to MongoDB ───────────────────────────────────────────────────────
 connectDB();
