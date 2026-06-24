@@ -47,9 +47,11 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   : [
       'http://localhost:3000',
       'http://localhost:5000',
+      'http://localhost:5001',
       'http://127.0.0.1:3000',
       'http://127.0.0.1:5000',
       'http://[::1]:5000',
+      'https://job-portal-lilac-alpha.vercel.app'
     ];
 
 app.use(
