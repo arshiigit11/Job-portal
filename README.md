@@ -1,7 +1,7 @@
 # TalentSync Job Portal 🚀
 
 TalentSync is a modern, responsive, and fully-featured Job Portal application designed to connect job seekers with recruiters seamlessly. 
-
+https://job-portal-lilac-alpha.vercel.app
 ## ✨ Key Features
 
 ### For Job Seekers
